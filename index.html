@@ -6,194 +6,35 @@
 <title>K2 — Хранение шин</title>
 
 <style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: Arial, sans-serif;
-  background: #111;
-  color: white;
-  min-height: 100vh;
-}
-
-header {
-  background: linear-gradient(135deg, #050505, #252525);
-  padding: 22px 18px;
-  border-bottom: 2px solid #c9a227;
-}
-
-header h1 {
-  color: #c9a227;
-  font-size: 28px;
-}
-
-header p {
-  color: #bbb;
-  margin-top: 6px;
-}
-
-.container {
-  max-width: 700px;
-  margin: auto;
-  padding: 18px;
-}
-
-.stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.stat {
-  background: #1c1c1c;
-  border-radius: 12px;
-  padding: 14px 8px;
-  text-align: center;
-  border: 1px solid #333;
-}
-
-.stat b {
-  display: block;
-  font-size: 24px;
-  color: #c9a227;
-}
-
-.stat span {
-  color: #aaa;
-  font-size: 12px;
-}
-
-input,
-select {
-  width: 100%;
-  padding: 15px;
-  border-radius: 12px;
-  border: 1px solid #444;
-  background: #222;
-  color: white;
-  font-size: 16px;
-  margin-bottom: 12px;
-}
-
-button {
-  border: none;
-  border-radius: 12px;
-  padding: 14px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.add-btn {
-  width: 100%;
-  margin-bottom: 20px;
-  background: #c9a227;
-  color: black;
-  font-size: 18px;
-}
-
-.form {
-  display: none;
-  background: #1c1c1c;
-  padding: 18px;
-  border-radius: 16px;
-  margin-bottom: 20px;
-  border: 1px solid #444;
-}
-
-.form h2 {
-  margin-bottom: 15px;
-  color: #c9a227;
-}
-
-.save-btn {
-  width: 100%;
-  background: #c9a227;
-  color: black;
-}
-
-.cancel-btn {
-  width: 100%;
-  margin-top: 10px;
-  background: #333;
-  color: white;
-}
-
-.records-title {
-  margin: 15px 0;
-  color: #c9a227;
-}
-
-.card {
-  background: #1d1d1d;
-  border: 1px solid #333;
-  border-left: 4px solid #c9a227;
-  padding: 16px;
-  border-radius: 12px;
-  margin-bottom: 12px;
-}
-
-.card h3 {
-  margin-bottom: 10px;
-  font-size: 19px;
-}
-
-.card p {
-  color: #ccc;
-  margin: 7px 0;
-}
-
-.status {
-  display: inline-block;
-  padding: 7px 10px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.stored {
-  background: #304b30;
-  color: #9bea9b;
-}
-
-.returned {
-  background: #4b3030;
-  color: #ff9999;
-}
-
-.actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.edit {
-  background: #c9a227;
-  color: black;
-}
-
-.status-btn {
-  background: #333;
-  color: white;
-}
-
-.delete {
-  grid-column: 1 / -1;
-  background: #333;
-  color: #ff7777;
-}
-
-.empty {
-  color: #777;
-  text-align: center;
-  padding: 30px;
-}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#111;color:#fff;min-height:100vh}
+header{background:linear-gradient(135deg,#050505,#252525);padding:22px 18px;border-bottom:2px solid #c9a227}
+header h1{color:#c9a227;font-size:28px}
+header p{color:#bbb;margin-top:6px}
+.container{max-width:700px;margin:auto;padding:18px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.stat{background:#1c1c1c;border:1px solid #333;border-radius:12px;padding:14px 8px;text-align:center}
+.stat b{display:block;font-size:24px;color:#c9a227}
+.stat span{color:#aaa;font-size:12px}
+input,select{width:100%;padding:15px;border-radius:12px;border:1px solid #444;background:#222;color:white;font-size:16px;margin-bottom:12px}
+button{border:none;border-radius:12px;padding:14px;font-size:16px;font-weight:bold;cursor:pointer}
+.add-btn,.save-btn{width:100%;background:#c9a227;color:#000;margin-bottom:20px}
+.form{display:none;background:#1c1c1c;padding:18px;border-radius:16px;margin-bottom:20px;border:1px solid #444}
+.form h2{margin-bottom:15px;color:#c9a227}
+.cancel-btn{width:100%;margin-top:10px;background:#333;color:#fff}
+.records-title{margin:15px 0;color:#c9a227}
+.card{background:#1d1d1d;border:1px solid #333;border-left:4px solid #c9a227;padding:16px;border-radius:12px;margin-bottom:12px}
+.card h3{margin-bottom:10px;font-size:19px}
+.card p{color:#ccc;margin:7px 0}
+.status{display:inline-block;padding:7px 10px;border-radius:8px;font-size:13px;font-weight:bold;margin-bottom:10px}
+.stored{background:#304b30;color:#9bea9b}
+.returned{background:#4b3030;color:#ff9999}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.edit{background:#c9a227;color:#000}
+.status-btn{background:#333;color:#fff}
+.delete{grid-column:1/-1;background:#333;color:#ff7777}
+.empty{color:#777;text-align:center;padding:30px}
+.loading{text-align:center;padding:25px;color:#c9a227}
 </style>
 </head>
 
@@ -207,22 +48,9 @@ button {
 <div class="container">
 
   <div class="stats">
-
-    <div class="stat">
-      <b id="total">0</b>
-      <span>Всего</span>
-    </div>
-
-    <div class="stat">
-      <b id="stored">0</b>
-      <span>На хранении</span>
-    </div>
-
-    <div class="stat">
-      <b id="places">0</b>
-      <span>Занято мест</span>
-    </div>
-
+    <div class="stat"><b id="total">0</b><span>Всего</span></div>
+    <div class="stat"><b id="stored">0</b><span>На хранении</span></div>
+    <div class="stat"><b id="places">0</b><span>Занято мест</span></div>
   </div>
 
   <input
@@ -243,40 +71,22 @@ button {
   </button>
 
   <div class="form" id="form">
-
     <h2 id="formTitle">Новое хранение</h2>
 
-    <input
-      type="number"
-      id="contract"
-      placeholder="Номер договора (1–250)"
-      min="1"
-      max="250"
-    >
+    <input type="number" id="contract"
+      placeholder="Номер договора (1–250)" min="1" max="250">
 
-    <input
-      type="text"
-      id="car"
-      placeholder="Номер автомобиля"
-    >
+    <input type="text" id="car"
+      placeholder="Номер автомобиля">
 
-    <input
-      type="tel"
-      id="phone"
-      placeholder="Номер телефона"
-    >
+    <input type="tel" id="phone"
+      placeholder="Номер телефона">
 
-    <input
-      type="text"
-      id="tires"
-      placeholder="Размер колёс"
-    >
+    <input type="text" id="tires"
+      placeholder="Размер колёс">
 
-    <input
-      type="text"
-      id="place"
-      placeholder="Номер места"
-    >
+    <input type="text" id="place"
+      placeholder="Номер места">
 
     <select id="status">
       <option value="stored">На хранении</option>
@@ -290,78 +100,87 @@ button {
     <button class="cancel-btn" onclick="cancelForm()">
       Отмена
     </button>
-
   </div>
 
   <h2 class="records-title">Хранение</h2>
-
-  <div id="records"></div>
+  <div id="records">
+    <div class="loading">Загрузка...</div>
+  </div>
 
 </div>
 
 <script>
 
-let records = JSON.parse(
-  localStorage.getItem("k2Records")
-) || [];
+const SUPABASE_URL = "https://idbzuilzkmwmttfvjxyy.supabase.co";
 
+const SUPABASE_KEY = "ВСТАВЬ_СЮДА_СВОЙ_PUBLISHABLE_KEY";
+
+let records = [];
 let editingId = null;
 
-records = records.map(item => ({
-  ...item,
-  status: item.status || "stored"
-}));
+async function api(path = "", options = {}) {
 
-function saveToStorage() {
-  localStorage.setItem(
-    "k2Records",
-    JSON.stringify(records)
+  const response = await fetch(
+    SUPABASE_URL + "/rest/v1/k2_records" + path,
+    {
+      ...options,
+      headers: {
+        "apikey": SUPABASE_KEY,
+        "Authorization": "Bearer " + SUPABASE_KEY,
+        "Content-Type": "application/json",
+        "Prefer": options.prefer || "return=representation",
+        ...(options.headers || {})
+      }
+    }
   );
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(error);
+  }
+
+  const text = await response.text();
+  return text ? JSON.parse(text) : [];
+}
+
+async function loadRecords() {
+  try {
+    records = await api("?select=*&order=contract.asc");
+    renderRecords();
+  } catch (error) {
+    console.error(error);
+    document.getElementById("records").innerHTML =
+      '<div class="empty">Ошибка подключения к базе</div>';
+  }
 }
 
 function showForm() {
-
   editingId = null;
 
   document.getElementById("formTitle").textContent =
     "Новое хранение";
 
-  document.getElementById("contract").value = "";
-  document.getElementById("car").value = "";
-  document.getElementById("phone").value = "";
-  document.getElementById("tires").value = "";
-  document.getElementById("place").value = "";
-  document.getElementById("status").value = "stored";
+  ["contract","car","phone","tires","place"].forEach(id =>
+    document.getElementById(id).value = ""
+  );
 
-  document.getElementById("form").style.display =
-    "block";
+  document.getElementById("status").value = "stored";
+  document.getElementById("form").style.display = "block";
 }
 
 function cancelForm() {
   editingId = null;
-  document.getElementById("form").style.display =
-    "none";
+  document.getElementById("form").style.display = "none";
 }
 
-function saveRecord() {
+async function saveRecord() {
 
-  const contract =
-    document.getElementById("contract").value.trim();
-
-  const car =
-    document.getElementById("car").value.trim();
-
-  const phone =
-    document.getElementById("phone").value.trim();
-
-  const tires =
-    document.getElementById("tires").value.trim();
-
-  const place =
-    document.getElementById("place").value.trim();
-
-  const status =
-    document.getElementById("status").value;
+  const contract = document.getElementById("contract").value.trim();
+  const car = document.getElementById("car").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const tires = document.getElementById("tires").value.trim();
+  const place = document.getElementById("place").value.trim();
+  const status = document.getElementById("status").value;
 
   if (!contract || !car || !phone || !tires || !place) {
     alert("Заполните все поля");
@@ -373,63 +192,36 @@ function saveRecord() {
     return;
   }
 
-  const duplicate = records.find(item =>
-    item.contract === contract &&
-    item.id !== editingId
-  );
+  const data = { contract, car, phone, tires, place, status };
 
-  if (duplicate) {
-    alert("Такой номер договора уже существует");
-    return;
-  }
+  try {
 
-  if (editingId !== null) {
-
-    const index = records.findIndex(
-      item => item.id === editingId
-    );
-
-    if (index !== -1) {
-      records[index] = {
-        ...records[index],
-        contract,
-        car,
-        phone,
-        tires,
-        place,
-        status
-      };
+    if (editingId !== null) {
+      await api("?id=eq." + editingId, {
+        method: "PATCH",
+        body: JSON.stringify(data)
+      });
+    } else {
+      await api("", {
+        method: "POST",
+        body: JSON.stringify(data)
+      });
     }
 
-  } else {
+    editingId = null;
+    document.getElementById("form").style.display = "none";
 
-    records.push({
-      id: Date.now(),
-      contract,
-      car,
-      phone,
-      tires,
-      place,
-      status
-    });
+    await loadRecords();
+
+  } catch (error) {
+    console.error(error);
+    alert("Ошибка сохранения. Возможно, такой договор уже существует.");
   }
-
-  saveToStorage();
-
-  editingId = null;
-
-  document.getElementById("form").style.display =
-    "none";
-
-  renderRecords();
 }
 
 function editRecord(id) {
 
-  const item = records.find(
-    record => record.id === id
-  );
-
+  const item = records.find(r => r.id === id);
   if (!item) return;
 
   editingId = id;
@@ -437,105 +229,82 @@ function editRecord(id) {
   document.getElementById("formTitle").textContent =
     "Редактирование";
 
-  document.getElementById("contract").value =
-    item.contract;
+  document.getElementById("contract").value = item.contract;
+  document.getElementById("car").value = item.car;
+  document.getElementById("phone").value = item.phone;
+  document.getElementById("tires").value = item.tires;
+  document.getElementById("place").value = item.place;
+  document.getElementById("status").value = item.status;
 
-  document.getElementById("car").value =
-    item.car;
+  document.getElementById("form").style.display = "block";
 
-  document.getElementById("phone").value =
-    item.phone;
-
-  document.getElementById("tires").value =
-    item.tires;
-
-  document.getElementById("place").value =
-    item.place;
-
-  document.getElementById("status").value =
-    item.status || "stored";
-
-  document.getElementById("form").style.display =
-    "block";
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
+  window.scrollTo({top:0,behavior:"smooth"});
 }
 
-function toggleStatus(id) {
+async function toggleStatus(id) {
 
-  const item = records.find(
-    record => record.id === id
-  );
-
+  const item = records.find(r => r.id === id);
   if (!item) return;
 
-  item.status =
-    item.status === "stored"
-      ? "returned"
-      : "stored";
+  const status =
+    item.status === "stored" ? "returned" : "stored";
 
-  saveToStorage();
+  try {
+    await api("?id=eq." + id, {
+      method: "PATCH",
+      body: JSON.stringify({ status })
+    });
 
-  renderRecords();
+    await loadRecords();
+
+  } catch (error) {
+    alert("Ошибка изменения статуса");
+  }
 }
 
-function deleteRecord(id) {
+async function deleteRecord(id) {
 
-  const item = records.find(
-    record => record.id === id
-  );
-
+  const item = records.find(r => r.id === id);
   if (!item) return;
 
-  if (!confirm(
-    "Удалить договор № " +
-    item.contract +
-    "?"
-  )) {
+  if (!confirm("Удалить договор № " + item.contract + "?")) {
     return;
   }
 
-  records = records.filter(
-    item => item.id !== id
-  );
+  try {
+    await api("?id=eq." + id, {
+      method: "DELETE",
+      prefer: "return=minimal"
+    });
 
-  saveToStorage();
+    await loadRecords();
 
-  renderRecords();
+  } catch (error) {
+    alert("Ошибка удаления");
+  }
 }
 
 function searchRecords() {
 
   const query =
-    document
-      .getElementById("search")
-      .value
-      .toLowerCase()
-      .trim();
+    document.getElementById("search").value
+      .toLowerCase().trim();
 
   const filter =
     document.getElementById("statusFilter").value;
 
   const filtered = records.filter(item => {
 
-    const text =
-      String(item.contract) + " " +
-      String(item.car) + " " +
-      String(item.phone) + " " +
-      String(item.tires) + " " +
-      String(item.place);
+    const text = [
+      item.contract,
+      item.car,
+      item.phone,
+      item.tires,
+      item.place
+    ].join(" ").toLowerCase();
 
-    const matchesSearch =
-      text.toLowerCase().includes(query);
-
-    const matchesStatus =
-      filter === "all" ||
-      item.status === filter;
-
-    return matchesSearch && matchesStatus;
+    return text.includes(query) &&
+      (filter === "all" || item.status === filter);
   });
 
   renderRecords(filtered);
@@ -543,13 +312,10 @@ function searchRecords() {
 
 function renderRecords(list = records) {
 
-  const container =
-    document.getElementById("records");
+  const container = document.getElementById("records");
 
   const storedRecords =
-    records.filter(
-      item => item.status === "stored"
-    );
+    records.filter(item => item.status === "stored");
 
   document.getElementById("total").textContent =
     records.length;
@@ -557,104 +323,61 @@ function renderRecords(list = records) {
   document.getElementById("stored").textContent =
     storedRecords.length;
 
-  const uniquePlaces =
-    new Set(
-      storedRecords.map(item => item.place)
-    );
-
   document.getElementById("places").textContent =
-    uniquePlaces.size;
+    new Set(storedRecords.map(item => item.place)).size;
 
-  if (list.length === 0) {
-
+  if (!list.length) {
     container.innerHTML =
       '<div class="empty">Записей не найдено</div>';
-
     return;
   }
 
   container.innerHTML = "";
 
   [...list]
-    .sort(
-      (a, b) =>
-        Number(a.contract) -
-        Number(b.contract)
-    )
+    .sort((a,b) => Number(a.contract) - Number(b.contract))
     .forEach(item => {
 
-      const stored =
-        item.status === "stored";
+      const isStored = item.status === "stored";
 
       container.innerHTML += `
-
         <div class="card">
 
-          <div class="status ${
-            stored ? "stored" : "returned"
-          }">
-            ${
-              stored
-                ? "На хранении"
-                : "Выдано"
-            }
+          <div class="status ${isStored ? "stored" : "returned"}">
+            ${isStored ? "На хранении" : "Выдано"}
           </div>
 
-          <h3>
-            Договор № ${item.contract}
-          </h3>
+          <h3>Договор № ${item.contract}</h3>
 
-          <p>
-            🚗 Машина: ${item.car}
-          </p>
-
-          <p>
-            📞 Телефон: ${item.phone}
-          </p>
-
-          <p>
-            🛞 Размер: ${item.tires}
-          </p>
-
-          <p>
-            📍 Место: ${item.place}
-          </p>
+          <p>🚗 Машина: ${item.car}</p>
+          <p>📞 Телефон: ${item.phone}</p>
+          <p>🛞 Размер: ${item.tires}</p>
+          <p>📍 Место: ${item.place}</p>
 
           <div class="actions">
 
-            <button
-              class="edit"
-              onclick="editRecord(${item.id})"
-            >
+            <button class="edit"
+              onclick="editRecord(${item.id})">
               ✏️ Изменить
             </button>
 
-            <button
-              class="status-btn"
-              onclick="toggleStatus(${item.id})"
-            >
-              ${
-                stored
-                  ? "📦 Выдать"
-                  : "↩️ Вернуть"
-              }
+            <button class="status-btn"
+              onclick="toggleStatus(${item.id})">
+              ${isStored ? "📦 Выдать" : "↩️ Вернуть"}
             </button>
 
-            <button
-              class="delete"
-              onclick="deleteRecord(${item.id})"
-            >
+            <button class="delete"
+              onclick="deleteRecord(${item.id})">
               🗑️ Удалить
             </button>
 
           </div>
-
         </div>
       `;
     });
 }
 
-renderRecords();
+loadRecords();
 
 </script>
 
