@@ -1,1 +1,1 @@
-# k2-Hranenie-Snin
+# k2-Hranenie-Shin
