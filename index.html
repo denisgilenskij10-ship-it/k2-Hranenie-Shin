@@ -103,6 +103,7 @@ button{border:none;border-radius:12px;padding:14px;font-size:16px;font-weight:bo
   </div>
 
   <h2 class="records-title">Хранение</h2>
+
   <div id="records">
     <div class="loading">Загрузка...</div>
   </div>
@@ -111,9 +112,11 @@ button{border:none;border-radius:12px;padding:14px;font-size:16px;font-weight:bo
 
 <script>
 
-const SUPABASE_URL = "https://idbzuilzkmwmttfvjxyy.supabase.co";
+const SUPABASE_URL =
+  "https://idbzuilzkmwmttfvjxyy.supabase.co";
 
-const SUPABASE_KEY = "ВСТАВЬ_СЮДА_СВОЙ_PUBLISHABLE_KEY";
+const SUPABASE_KEY =
+  "sb_publishable_jw6h0nV3HggGUhaz5jhXOQ_48Eph7OL";
 
 let records = [];
 let editingId = null;
@@ -192,7 +195,14 @@ async function saveRecord() {
     return;
   }
 
-  const data = { contract, car, phone, tires, place, status };
+  const data = {
+    contract,
+    car,
+    phone,
+    tires,
+    place,
+    status
+  };
 
   try {
 
@@ -238,7 +248,10 @@ function editRecord(id) {
 
   document.getElementById("form").style.display = "block";
 
-  window.scrollTo({top:0,behavior:"smooth"});
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
 }
 
 async function toggleStatus(id) {
@@ -312,7 +325,8 @@ function searchRecords() {
 
 function renderRecords(list = records) {
 
-  const container = document.getElementById("records");
+  const container =
+    document.getElementById("records");
 
   const storedRecords =
     records.filter(item => item.status === "stored");
@@ -338,7 +352,8 @@ function renderRecords(list = records) {
     .sort((a,b) => Number(a.contract) - Number(b.contract))
     .forEach(item => {
 
-      const isStored = item.status === "stored";
+      const isStored =
+        item.status === "stored";
 
       container.innerHTML += `
         <div class="card">
