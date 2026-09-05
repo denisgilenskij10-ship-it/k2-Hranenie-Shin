@@ -5,24 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>K2 — Хранение шин</title>
 
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,sans-serif;background:#111;color:#fff;min-height:100vh}
 header{background:linear-gradient(135deg,#050505,#252525);padding:22px 18px;border-bottom:2px solid #c9a227}
 header h1{color:#c9a227;font-size:28px}
 header p{color:#bbb;margin-top:6px}
-.container{max-width:700px;margin:auto;padding:18px}
+.container{max-width:760px;margin:auto;padding:18px}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
 .stat{background:#1c1c1c;border:1px solid #333;border-radius:12px;padding:14px 8px;text-align:center}
 .stat b{display:block;font-size:24px;color:#c9a227}
 .stat span{color:#aaa;font-size:12px}
-input,select{width:100%;padding:15px;border-radius:12px;border:1px solid #444;background:#222;color:white;font-size:16px;margin-bottom:12px}
+input,select{width:100%;padding:15px;border-radius:12px;border:1px solid #444;background:#222;color:#fff;font-size:16px;margin-bottom:12px}
 button{border:none;border-radius:12px;padding:14px;font-size:16px;font-weight:bold;cursor:pointer}
 .add-btn,.save-btn{width:100%;background:#c9a227;color:#000;margin-bottom:12px}
 .tools{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
-.tool-btn{background:#2a2a2a;color:#fff;border:1px solid #444}
-.backup-btn{background:#2a2a2a;color:#c9a227;border:1px solid #555}
-.restore-btn{grid-column:1/-1;background:#2a2a2a;color:#fff;border:1px solid #555}
+.tool-btn,.backup-btn,.restore-btn{background:#2a2a2a;color:#fff;border:1px solid #444}
+.backup-btn{color:#c9a227}
+.restore-btn{grid-column:1/-1}
 .form{display:none;background:#1c1c1c;padding:18px;border-radius:16px;margin-bottom:20px;border:1px solid #444}
 .form h2{margin-bottom:15px;color:#c9a227}
 .cancel-btn{width:100%;background:#333;color:#fff}
@@ -41,6 +43,12 @@ button{border:none;border-radius:12px;padding:14px;font-size:16px;font-weight:bo
 .empty{color:#777;text-align:center;padding:30px}
 .loading{text-align:center;padding:25px;color:#c9a227}
 .small-note{color:#777;font-size:12px;margin-top:7px}
+.section-note{font-size:12px;color:#777;margin:-7px 0 14px}
+@media(max-width:520px){
+header h1{font-size:24px}
+.container{padding:12px}
+button{font-size:15px}
+}
 </style>
 </head>
 
@@ -76,7 +84,7 @@ oninput="searchRecords()">
 <div class="tools">
 
 <button class="tool-btn" onclick="exportExcel()">
-📊 Excel
+📊 Скачать Excel
 </button>
 
 <button class="backup-btn" onclick="createBackup()">
@@ -135,6 +143,9 @@ placeholder="Номер места">
 </div>
 
 <h2 class="records-title">Хранение</h2>
+<div class="section-note">
+По умолчанию договоры отсортированы по номеру.
+</div>
 
 <div id="records">
 <div class="loading">Загрузка...</div>
@@ -150,8 +161,8 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
 "sb_publishable_jw6h0nV3HggGUhaz5jhXOQ_48Eph7OL";
 
-let records = [];
-let editingId = null;
+let records=[];
+let editingId=null;
 
 async function api(path="",options={}){
 
@@ -174,7 +185,9 @@ throw new Error(error);
 }
 
 const text=await response.text();
+
 return text?JSON.parse(text):[];
+
 }
 
 async function loadRecords(){
@@ -182,6 +195,7 @@ async function loadRecords(){
 try{
 
 records=await api("?select=*&order=contract.asc");
+
 renderRecords();
 
 }catch(error){
@@ -192,6 +206,7 @@ document.getElementById("records").innerHTML=
 '<div class="empty">Ошибка подключения к базе</div>';
 
 }
+
 }
 
 function showForm(){
@@ -202,34 +217,63 @@ document.getElementById("formTitle").textContent=
 "Новое хранение";
 
 ["fio","contract","car","phone","tires","place"]
-.forEach(id=>document.getElementById(id).value="");
+.forEach(id=>{
+document.getElementById(id).value="";
+});
 
 document.getElementById("status").value="stored";
+
 document.getElementById("form").style.display="block";
 
-window.scrollTo({top:150,behavior:"smooth"});
+window.scrollTo({
+top:150,
+behavior:"smooth"
+});
+
 }
 
 function cancelForm(){
 
 editingId=null;
+
 document.getElementById("form").style.display="none";
 
 }
 
 async function saveRecord(){
 
-const fio=document.getElementById("fio").value.trim();
-const contract=document.getElementById("contract").value.trim();
-const car=document.getElementById("car").value.trim();
-const phone=document.getElementById("phone").value.trim();
-const tires=document.getElementById("tires").value.trim();
-const place=document.getElementById("place").value.trim();
-const status=document.getElementById("status").value;
+const fio=
+document.getElementById("fio").value.trim();
 
-if(!fio||!contract||!car||!phone||!tires||!place){
+const contract=
+document.getElementById("contract").value.trim();
+
+const car=
+document.getElementById("car").value.trim();
+
+const phone=
+document.getElementById("phone").value.trim();
+
+const tires=
+document.getElementById("tires").value.trim();
+
+const place=
+document.getElementById("place").value.trim();
+
+const status=
+document.getElementById("status").value;
+
+if(
+!fio||
+!contract||
+!car||
+!phone||
+!tires||
+!place
+){
 
 alert("Заполните все поля");
+
 return;
 
 }
@@ -241,42 +285,66 @@ Number(contract)>250
 ){
 
 alert("Номер договора должен быть от 1 до 250");
+
 return;
 
 }
 
-const duplicateContract=records.find(item=>
+const duplicateContract=
+records.find(item=>
+
 Number(item.contract)===Number(contract)&&
 item.id!==editingId
+
 );
 
 if(duplicateContract){
 
-alert("Договор № "+contract+" уже существует");
+alert(
+"Договор № "+contract+
+" уже существует"
+);
+
 return;
 
 }
 
-const occupiedPlace=records.find(item=>
-String(item.place).trim().toLowerCase()===
-place.toLowerCase()&&
-item.status==="stored"&&
+const occupiedPlace=
+records.find(item=>
+
+String(item.place)
+.trim()
+.toLowerCase()===
+place.toLowerCase()
+
+&&
+
+item.status==="stored"
+
+&&
+
 item.id!==editingId
+
 );
 
 if(occupiedPlace){
 
 const ok=confirm(
-"Внимание! Место № "+place+
+
+"Внимание! Место № "+
+place+
 " уже занято договором № "+
 occupiedPlace.contract+
 ". Всё равно сохранить?"
+
 );
 
 if(!ok)return;
+
 }
 
 const data={
+
 fio,
 contract,
 car,
@@ -284,149 +352,216 @@ phone,
 tires,
 place,
 status,
-updated_at:new Date().toISOString()
+
+updated_at:
+new Date().toISOString()
+
 };
 
 try{
 
 if(editingId!==null){
 
-await api("?id=eq."+editingId,{
+await api(
+"?id=eq."+editingId,
+{
 method:"PATCH",
 body:JSON.stringify(data)
-});
+}
+);
 
 }else{
 
-data.created_at=new Date().toISOString();
+data.created_at=
+new Date().toISOString();
 
-await api("",{
+await api(
+"",
+{
 method:"POST",
 body:JSON.stringify(data)
-});
+}
+);
 
 }
 
 editingId=null;
 
-document.getElementById("form").style.display="none";
+document.getElementById("form")
+.style.display="none";
 
 await loadRecords();
 
 }catch(error){
 
 console.error(error);
+
 alert("Ошибка сохранения");
 
 }
+
 }
 
 function editRecord(id){
 
-const item=records.find(r=>r.id===id);
+const item=
+records.find(r=>r.id===id);
 
 if(!item)return;
 
 editingId=id;
 
-document.getElementById("formTitle").textContent=
-"Редактирование";
+document.getElementById("formTitle")
+.textContent="Редактирование";
 
-document.getElementById("fio").value=item.fio||"";
-document.getElementById("contract").value=item.contract;
-document.getElementById("car").value=item.car;
-document.getElementById("phone").value=item.phone;
-document.getElementById("tires").value=item.tires;
-document.getElementById("place").value=item.place;
-document.getElementById("status").value=item.status;
+document.getElementById("fio").value=
+item.fio||"";
 
-document.getElementById("form").style.display="block";
+document.getElementById("contract").value=
+item.contract;
 
-window.scrollTo({top:150,behavior:"smooth"});
+document.getElementById("car").value=
+item.car;
+
+document.getElementById("phone").value=
+item.phone;
+
+document.getElementById("tires").value=
+item.tires;
+
+document.getElementById("place").value=
+item.place;
+
+document.getElementById("status").value=
+item.status;
+
+document.getElementById("form")
+.style.display="block";
+
+window.scrollTo({
+top:150,
+behavior:"smooth"
+});
+
 }
 
 async function toggleStatus(id){
 
-const item=records.find(r=>r.id===id);
+const item=
+records.find(r=>r.id===id);
 
 if(!item)return;
 
 const status=
-item.status==="stored"?"returned":"stored";
+item.status==="stored"
+?"returned"
+:"stored";
 
 try{
 
-await api("?id=eq."+id,{
+await api(
+"?id=eq."+id,
+{
 method:"PATCH",
 body:JSON.stringify({
 status,
-updated_at:new Date().toISOString()
+updated_at:
+new Date().toISOString()
 })
-});
+}
+);
 
 await loadRecords();
 
 }catch(error){
 
 console.error(error);
-alert("Ошибка изменения статуса");
+
+alert(
+"Ошибка изменения статуса"
+);
 
 }
+
 }
 
 async function deleteRecord(id){
 
-const item=records.find(r=>r.id===id);
+const item=
+records.find(r=>r.id===id);
 
 if(!item)return;
 
-if(!confirm("Удалить договор № "+item.contract+"?")){
-return;
-}
+if(
+!confirm(
+"Удалить договор № "+
+item.contract+
+"?"
+)
+)return;
 
 try{
 
-await api("?id=eq."+id,{
+await api(
+"?id=eq."+id,
+{
 method:"DELETE",
 prefer:"return=minimal"
-});
+}
+);
 
 await loadRecords();
 
 }catch(error){
 
 console.error(error);
+
 alert("Ошибка удаления");
 
 }
+
 }
 
 function searchRecords(){
 
 const query=
 document.getElementById("search")
-.value.toLowerCase().trim();
+.value
+.toLowerCase()
+.trim();
 
 const filter=
-document.getElementById("statusFilter").value;
+document.getElementById("statusFilter")
+.value;
 
-const filtered=records.filter(item=>{
+const filtered=
+records.filter(item=>{
 
 const text=[
+
 item.fio||"",
 item.contract,
 item.car,
 item.phone,
 item.tires,
 item.place
-].join(" ").toLowerCase();
 
-return text.includes(query)&&
-(filter==="all"||item.status===filter);
+]
+.join(" ")
+.toLowerCase();
+
+return(
+text.includes(query)&&
+(
+filter==="all"||
+item.status===filter
+)
+);
 
 });
 
 renderRecords(filtered);
+
 }
 
 function formatDate(date){
@@ -434,9 +569,14 @@ function formatDate(date){
 if(!date)return "";
 
 try{
-return new Date(date).toLocaleString("ru-RU");
+
+return new Date(date)
+.toLocaleString("ru-RU");
+
 }catch{
+
 return date;
+
 }
 
 }
@@ -444,6 +584,7 @@ return date;
 function escapeHtml(value){
 
 return String(value??"")
+
 .replaceAll("&","&amp;")
 .replaceAll("<","&lt;")
 .replaceAll(">","&gt;")
@@ -454,22 +595,34 @@ return String(value??"")
 
 function renderRecords(list=records){
 
-const container=document.getElementById("records");
+const container=
+document.getElementById("records");
 
 const storedRecords=
-records.filter(item=>item.status==="stored");
+records.filter(
+item=>item.status==="stored"
+);
 
-document.getElementById("total").textContent=
+document.getElementById("total")
+.textContent=
 records.length;
 
-document.getElementById("stored").textContent=
+document.getElementById("stored")
+.textContent=
 storedRecords.length;
 
-document.getElementById("places").textContent=
+document.getElementById("places")
+.textContent=
+
 new Set(
-storedRecords.map(item=>
-String(item.place).trim().toLowerCase()
+
+storedRecords.map(
+item=>
+String(item.place)
+.trim()
+.toLowerCase()
 )
+
 ).size;
 
 if(!list.length){
@@ -478,129 +631,229 @@ container.innerHTML=
 '<div class="empty">Записей не найдено</div>';
 
 return;
+
 }
 
 container.innerHTML="";
 
 [...list]
-.sort((a,b)=>Number(a.contract)-Number(b.contract))
+
+.sort(
+(a,b)=>
+Number(a.contract)-
+Number(b.contract)
+)
+
 .forEach(item=>{
 
-const isStored=item.status==="stored";
+const isStored=
+item.status==="stored";
 
 container.innerHTML+=`
+
 <div class="card">
 
-<div class="status ${isStored?"stored":"returned"}">
-${isStored?"На хранении":"Выдано"}
+<div class="status ${
+isStored
+?"stored"
+:"returned"
+}">
+
+${
+isStored
+?"На хранении"
+:"Выдано"
+}
+
 </div>
 
-<h3>Договор № ${escapeHtml(item.contract)}</h3>
+<h3>
+Договор № ${escapeHtml(item.contract)}
+</h3>
 
-<p class="fio">👤 ${escapeHtml(item.fio||"ФИО не указано")}</p>
-<p>🚗 Машина: ${escapeHtml(item.car)}</p>
-<p>📞 Телефон: ${escapeHtml(item.phone)}</p>
-<p>🛞 Размер: ${escapeHtml(item.tires)}</p>
-<p>📍 Место: ${escapeHtml(item.place)}</p>
+<p class="fio">
+👤 ${escapeHtml(
+item.fio||
+"ФИО не указано"
+)}
+</p>
+
+<p>
+🚗 Машина:
+${escapeHtml(item.car)}
+</p>
+
+<p>
+📞 Телефон:
+${escapeHtml(item.phone)}
+</p>
+
+<p>
+🛞 Размер:
+${escapeHtml(item.tires)}
+</p>
+
+<p>
+📍 Место:
+${escapeHtml(item.place)}
+</p>
 
 ${
 item.created_at
-?`<div class="small-note">
-Создано: ${escapeHtml(formatDate(item.created_at))}
-</div>`
+?
+`
+<div class="small-note">
+Создано:
+${escapeHtml(
+formatDate(item.created_at)
+)}
+</div>
+`
 :""
 }
 
 <div class="actions">
 
-<button class="edit"
+<button
+class="edit"
 onclick="editRecord(${item.id})">
 ✏️ Изменить
 </button>
 
-<button class="status-btn"
+<button
+class="status-btn"
 onclick="toggleStatus(${item.id})">
-${isStored?"📦 Выдать":"↩️ Вернуть"}
+
+${
+isStored
+?"📦 Выдать"
+:"↩️ Вернуть"
+}
+
 </button>
 
-<button class="delete"
+<button
+class="delete"
 onclick="deleteRecord(${item.id})">
 🗑️ Удалить
 </button>
 
 </div>
+
 </div>
+
 `;
 
 });
 
 }
 
-/* ЭКСПОРТ */
-
-function csvCell(value){
-
-const text=
-String(value??"").replaceAll('"','""');
-
-return `"${text}"`;
-
-}
+/* НАСТОЯЩИЙ EXCEL XLSX */
 
 function exportExcel(){
 
 if(!records.length){
 
-alert("В базе пока нет записей");
+alert(
+"В базе пока нет записей"
+);
+
 return;
 
 }
 
-const rows=[[
-"Договор",
-"ФИО",
-"Автомобиль",
-"Телефон",
-"Размер колёс",
-"Место",
-"Статус",
-"Дата создания",
-"Дата изменения"
-]];
+if(typeof XLSX==="undefined"){
 
+alert(
+"Модуль Excel ещё не загрузился. Подожди несколько секунд и попробуй снова."
+);
+
+return;
+
+}
+
+const data=
 [...records]
-.sort((a,b)=>Number(a.contract)-Number(b.contract))
-.forEach(item=>{
 
-rows.push([
-item.contract,
+.sort(
+(a,b)=>
+Number(a.contract)-
+Number(b.contract)
+)
+
+.map(item=>({
+
+"Договор":
+Number(item.contract),
+
+"ФИО":
 item.fio||"",
+
+"Автомобиль":
 item.car||"",
+
+"Телефон":
 item.phone||"",
+
+"Размер колёс":
 item.tires||"",
+
+"Место":
 item.place||"",
-item.status==="stored"?"На хранении":"Выдано",
+
+"Статус":
+item.status==="stored"
+?"На хранении"
+:"Выдано",
+
+"Дата создания":
 formatDate(item.created_at),
+
+"Дата изменения":
 formatDate(item.updated_at)
-]);
 
-});
+}));
 
-const csv=
-"\uFEFF"+
-rows.map(row=>row.map(csvCell).join(";"))
-.join("\r\n");
+const worksheet=
+XLSX.utils.json_to_sheet(data);
 
-const blob=
-new Blob([csv],{
-type:"text/csv;charset=utf-8;"
-});
+worksheet["!cols"]=[
 
-downloadBlob(
-blob,
+{wch:10},
+{wch:28},
+{wch:16},
+{wch:18},
+{wch:16},
+{wch:10},
+{wch:16},
+{wch:22},
+{wch:22}
+
+];
+
+worksheet["!autofilter"]={
+ref:worksheet["!ref"]
+};
+
+const workbook=
+XLSX.utils.book_new();
+
+XLSX.utils.book_append_sheet(
+workbook,
+worksheet,
+"Хранение K2"
+);
+
+XLSX.writeFile(
+
+workbook,
+
 "K2_Хранение_"+
-new Date().toISOString().slice(0,10)+
-".csv"
+new Date()
+.toISOString()
+.slice(0,10)+
+".xlsx"
+
 );
 
 }
@@ -611,40 +864,76 @@ function createBackup(){
 
 if(!records.length){
 
-alert("В базе пока нет записей");
+alert(
+"В базе пока нет записей"
+);
+
 return;
 
 }
 
 const backup={
-app:"K2 — Хранение шин",
-version:2,
-created:new Date().toISOString(),
-count:records.length,
+
+app:
+"K2 — Хранение шин",
+
+version:3,
+
+created:
+new Date().toISOString(),
+
+count:
+records.length,
+
 records
+
 };
 
 const blob=
 new Blob(
-[JSON.stringify(backup,null,2)],
-{type:"application/json;charset=utf-8"}
+
+[
+JSON.stringify(
+backup,
+null,
+2
+)
+],
+
+{
+type:
+"application/json;charset=utf-8"
+}
+
 );
 
 downloadBlob(
+
 blob,
+
 "K2_BACKUP_"+
-new Date().toISOString()
+
+new Date()
+.toISOString()
 .slice(0,19)
-.replaceAll(":","-")+
-".json"
+.replaceAll(":","-")
+
++".json"
+
 );
 
 }
 
-function downloadBlob(blob,filename){
+function downloadBlob(
+blob,
+filename
+){
 
-const url=URL.createObjectURL(blob);
-const link=document.createElement("a");
+const url=
+URL.createObjectURL(blob);
+
+const link=
+document.createElement("a");
 
 link.href=url;
 link.download=filename;
@@ -652,9 +941,13 @@ link.download=filename;
 document.body.appendChild(link);
 
 link.click();
+
 link.remove();
 
-setTimeout(()=>URL.revokeObjectURL(url),1000);
+setTimeout(
+()=>URL.revokeObjectURL(url),
+1000
+);
 
 }
 
@@ -662,72 +955,117 @@ setTimeout(()=>URL.revokeObjectURL(url),1000);
 
 async function restoreBackup(event){
 
-const file=event.target.files[0];
+const file=
+event.target.files[0];
 
 if(!file)return;
 
 try{
 
-const text=await file.text();
-const backup=JSON.parse(text);
+const text=
+await file.text();
 
-if(!backup.records||!Array.isArray(backup.records)){
+const backup=
+JSON.parse(text);
 
-alert("Это не резервная копия K2");
+if(
+!backup.records||
+!Array.isArray(backup.records)
+){
+
+alert(
+"Это не резервная копия K2"
+);
+
 event.target.value="";
+
 return;
 
 }
 
 const ok=confirm(
+
 "В резервной копии записей: "+
 backup.records.length+
+
 ".\n\nЗаписи с существующими номерами договоров будут обновлены, новые — добавлены.\n\nПродолжить?"
+
 );
 
 if(!ok){
 
 event.target.value="";
+
 return;
 
 }
 
-for(const item of backup.records){
+for(
+const item of backup.records
+){
 
 const data={
-fio:item.fio||"",
-contract:item.contract,
-car:item.car||"",
-phone:item.phone||"",
-tires:item.tires||"",
-place:item.place||"",
-status:item.status||"stored",
-updated_at:item.updated_at||
+
+fio:
+item.fio||"",
+
+contract:
+item.contract,
+
+car:
+item.car||"",
+
+phone:
+item.phone||"",
+
+tires:
+item.tires||"",
+
+place:
+item.place||"",
+
+status:
+item.status||"stored",
+
+updated_at:
+item.updated_at||
 new Date().toISOString()
+
 };
 
 if(item.created_at){
-data.created_at=item.created_at;
+
+data.created_at=
+item.created_at;
+
 }
 
 const existing=
-records.find(r=>
-Number(r.contract)===Number(item.contract)
+records.find(
+r=>
+Number(r.contract)===
+Number(item.contract)
 );
 
 if(existing){
 
-await api("?id=eq."+existing.id,{
+await api(
+"?id=eq."+existing.id,
+{
 method:"PATCH",
 body:JSON.stringify(data)
-});
+}
+);
 
 }else{
 
-await api("",{
+await api(
+"",
+{
 method:"POST",
 body:JSON.stringify(data)
-});
+}
+);
 
 }
 
@@ -735,12 +1073,17 @@ body:JSON.stringify(data)
 
 await loadRecords();
 
-alert("Резервная копия восстановлена успешно");
+alert(
+"Резервная копия восстановлена успешно"
+);
 
 }catch(error){
 
 console.error(error);
-alert("Ошибка восстановления резервной копии");
+
+alert(
+"Ошибка восстановления резервной копии"
+);
 
 }
 
